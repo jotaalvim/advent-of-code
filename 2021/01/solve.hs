@@ -17,3 +17,12 @@ main = do
     --    lf = map (read :: String -> Int) ln
     putStrLn $ "Part 1: " ++ show ( part1 input )
     putStrLn $ "Part 2: " ++ show ( part2 input )
+--
+--main = do
+--      print
+--    . length 
+--    . filter (uncurry (<))
+--    . (\l -> zip l $ tail l)
+--    . lines
+--    =<< readFile
+--    =<< getArgs
