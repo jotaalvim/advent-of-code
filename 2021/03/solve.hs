@@ -19,24 +19,28 @@ rep '1' = '0'
 gamma :: [String] -> String
 gamma (h:t) = [ count $ map (!!k) (h:t) | k <- [0..(length h) -1 ]]
 
-epsilon :: String -> String 
-epsilon = map rep
+epsilon :: [String] -> String 
+epsilon = map rep . gamma
 
 part1 :: [String] -> Int
 part1 i = e*g
     where
-        ga = gamma i
-        g = bin2Int ga 
-        e = bin2Int $ epsilon ga
+        g = bin2Int $ gamma i
+        e = bin2Int $ epsilon i
 
-rating :: [String] -> Int -> String
-rating [x] _ = x
-rating s n = rating (filter ( (s!!n) == $ !! n ) s) (n+1)
-    where g = gamma s
+rating :: [String] -> ([String] -> String) -> Int -> String
+rating [x] f _ = x
+rating s f n = rating (filter ((==((f s)!!n)) . (!!n)) s) f (n+1)
 
+part2 :: [String] -> Int
+part2 i = o * co2
+    where 
+        o   = bin2Int $ rating i   gamma 0 
+        co2 = bin2Int $ rating i epsilon 0 
 
 main :: IO ()
 main = do
     input <- lines <$> readFile "input.txt"
     putStrLn $ "Part 1: " ++ show ( part1 input )
-    --putStrLn $ "Part 2: " ++ show ( part2 input )
+    putStrLn $ "Part 2: " ++ show ( part2 input )
+
