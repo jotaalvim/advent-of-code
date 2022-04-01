@@ -38,9 +38,18 @@ part1 (bl,lbin) = filterBingo lbin bl 0
 
 
      
+filterNotBingo :: [Bingo] -> [Int] -> Int -> Int
+filterNotBingo bs l n
+    | not $ null fff  = filterNotBingo fff l (n+1)
+    | otherwise = head fff
+    where 
+        fff = filter (==0) $  map (\bin -> f bin (take n l) ) bs
 
+part2 :: ([Int],[Bingo]) -> Int 
+part2 (bl,lbin) = filterNotBingo lbin bl 0
 
 main :: IO ()
 main = do 
-    input<- parse <$> filter (not.null) <$> lines <$> readFile "input2.txt"
+    input<- parse <$> filter (not.null) <$> lines <$> readFile "input.txt"
     putStrLn $ "Part 1: "++ show (part1 input)
+    putStrLn $ "Part 1: "++ show (part2 input)
