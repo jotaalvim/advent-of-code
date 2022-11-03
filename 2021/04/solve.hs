@@ -1,55 +1,72 @@
 import Data.List.Split
 import Data.List
 
-type Bingo = [[Int]] 
 
-parse :: [String] -> ([Int],[Bingo])
-parse (l:t) = (pl,takes5 t)
-    where pl = map read $ splitOn "," l
+data BingoNumber = Drawn Int | NotDrawn Int 
+    deriving(Show, Eq)
 
-takes5 :: [String] -> [Bingo]
-takes5 [] = []
-takes5 (a:b:c:d:e:t) = bingo : takes5 t
-    where 
-        bingo = [ map read $ words line | line <- [a,b,c,d,e]] :: Bingo
-
-bingo :: Bingo -> [Int] -> Bool
-bingo b bl = any (line bl) b || any (line bl) (transpose b)
-
-line :: [Int] -> [Int] -> Bool
-line bn l = all (\x -> elem x bn) l
-
-sumBingo :: Bingo -> [Int] -> Int
-sumBingo b l = sum ll * last l
-    where ll = filter (\x -> notElem x l) $ concat b 
-          
-f :: Bingo -> [Int] -> Int
-f b l | bingo b l = sumBingo b l | otherwise = 0
-
-filterBingo :: [Bingo] -> [Int] -> Int -> Int
-filterBingo bs l n
-    | null fff  = filterBingo bs l (n+1)
-    | otherwise = head fff
-    where 
-        fff = filter (/=0) $  map (\bin->f bin (take n l) ) bs
-
-part1 :: ([Int],[Bingo]) -> Int 
-part1 (bl,lbin) = filterBingo lbin bl 0
+type BingoBoard = [[BingoNumber]]
 
 
-     
-filterNotBingo :: [Bingo] -> [Int] -> Int -> Int
-filterNotBingo bs l n
-    | not $ null fff  = filterNotBingo fff l (n+1)
-    | otherwise = head fff
-    where 
-        fff = filter (==0) $  map (\bin -> f bin (take n l) ) bs
+isDrawn :: BingoNumber -> Bool
+isDrawn (Drawn _) = True
+isDrawn _ = False
 
-part2 :: ([Int],[Bingo]) -> Int 
-part2 (bl,lbin) = filterNotBingo lbin bl 0
+
+takeNum :: Int -> BingoNumber -> BingoNumber
+takeNum _ (Drawn n) = Drawn n
+takeNum x (NotDrawn n)
+    | x == n = Drawn n
+    | otherwise = NotDrawn n
+
+
+takeNumBoard :: Int -> BingoBoard -> BingoBoard 
+takeNumBoard x = map  $ map $ takeNum x
+
+
+checkRow :: BingoBoard -> Bool
+checkRow = any $ all (isDrawn)
+
+
+checkColumn :: BingoBoard -> Bool
+checkColumn = checkRow . transpose 
+
+
+takeNumBoards :: Int -> [BingoBoard] -> [BingoBoard]
+takeNumBoards x = map takeNumBoard x
+
+
+--part1 :: ([Int],[Bingo]) -> Int 
+--part1 ((n:ns),boards)
+
+-- part 2
+
+-- parsing 
+
+par a b x = (a x, b x)
+
+td :: [a] -> ([a],[a])
+td = par (take 5) (drop 5)
+
+parseBoard :: [[BingoNumber]] -> [BingoBoard]
+parseBoard [] = []
+parseBoard (a:b:c:d:e:t) = [a,b,c,d,e]: parseBoard t
+
+parseNum :: [String] -> [[BingoNumber]]
+parseNum l  = map (map ( NotDrawn . (\x -> read x ::Int) ) ) $ map words l
+
+parseList :: String -> [Int]
+parseList = map read . words 
+
+parseInput :: String -> ([Int],[BingoBoard])
+parseInput i = (parseList h,parseBoard $ parseNum t)
+    where (h:t) = filter (not.null) $ lines i
+
 
 main :: IO ()
 main = do 
-    input<- parse <$> filter (not.null) <$> lines <$> readFile "input.txt"
-    putStrLn $ "Part 1: "++ show (part1 input)
-    putStrLn $ "Part 1: "++ show (part2 input)
+    input <- parseInput <$> readFile "input.txt"
+
+    --putStrLn $ "Part 1: "++ show (part1 input)
+    --putStrLn $ "Part 1: "++ show (part2 input)
+    putStrLn $ show input
