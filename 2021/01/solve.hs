@@ -1,4 +1,3 @@
-
 part1 :: [Int] -> Int 
 part1 l = sum [ 1 | (a,b) <- zip l $ tail l , a < b ] 
 
