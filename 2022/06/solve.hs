@@ -2,6 +2,7 @@ import Data.List
 
 --Prelude Pointfree> pointfree' "different l = nub l == l"
 --Just "different = (==) =<< nub"
+
 different :: Eq a => [a] -> Bool
 different l = nub l == l
 

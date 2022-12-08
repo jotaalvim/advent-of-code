@@ -5,11 +5,11 @@
 --import Text.Regex.TDFA
 
 --parseInput :: String -> Ship
-parseInput  = map parseMove . map odds . map words . lines . (!! 1) . splitOn "\n\n"
+parseInput  = 
 
 main :: IO ()
 main = do
     input <- parseInput <$> readFile "input.txt"
-    putStrLn $ "Part 1: " ++ show ( part1 input s)
-    putStrLn $ "Part 2: " ++ show ( part2 input s)
+    putStrLn $ "Part 1: " ++ show ( part1 input )
+    putStrLn $ "Part 2: " ++ show ( part2 input )
 
