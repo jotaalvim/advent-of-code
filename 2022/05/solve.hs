@@ -9,20 +9,19 @@ type To     = Int
 type Amount = Int
 type Move   = (Amount,(From, To))
 
-data Ship = Map Int String
+type Ship = Map Int String
 
---s :: Ship
-s :: Map Int [Char]
+s :: Ship
+--s :: Map Int [Char]
 s = Map.fromList [(1,"ZTFRWJG"),(2,"GWM"),(3,"JNHG"),(4,"JRCNW"),(5,"WFSBGQVM"),(6,"SRTDVWC"),(7,"HBNCDZGV"),(8,"SJNMGC"),(9,"GPNWCJDL")] 
 
 -- part1
 
-shiplast :: Map Int [Char] -> [Char]
+shiplast :: Ship -> [Char]
 shiplast s = [ last (s Map.! n) | n <- [1..9]]
 
--- ????
---move :: (a -> a) -> Map Int [Char] -> Move -> Map Int [Char]
 --move :: ([a] -> [a]) -> Map Int [Char] -> Move -> Map Int [Char]
+move :: Ord b => ([a] -> [a]) -> Map b [a] -> (Int, (b, b)) -> Map b [a]
 move k ship (a,(f,t)) = newShip2
     where containers = k $ take a  $ reverse $ ship Map.! f
           newF       = reverse $ drop a $ reverse $ ship Map.! f
@@ -30,12 +29,12 @@ move k ship (a,(f,t)) = newShip2
           to         = ship Map.! t
           newShip2   = Map.insert t (to++containers) newShip
 
-part1 :: [Move] -> Map Int [Char] -> [Char]
+part1 :: [Move] -> Ship -> [Char]
 part1 l s = shiplast $ foldl (move id) s l
 
 -- part2
 
-part2 :: [Move] -> Map Int [Char] -> [Char]
+part2 :: [Move] -> Ship -> [Char]
 part2 l s = shiplast $ foldl (move reverse) s l
 
 -- parsing
