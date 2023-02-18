@@ -1,20 +1,18 @@
 import Data.List
 
---Prelude Pointfree> pointfree' "different l = nub l == l"
---Just "different = (==) =<< nub"
-
 different :: Eq a => [a] -> Bool
-different l = nub l == l
+-- different l = nub l == l
+different = nub >>= (==)
 
-count :: String -> Int -> Int
-count l n
-    | different (a:as) = n
-    | otherwise   = 1 + count (as ++ b) n
-    where (a:as,b) = splitAt n l
+count :: Int -> String -> Int
+count n l 
+    | different j = n
+    | True        = 1 + count n (tail j ++ b)
+    where (j,b) = splitAt n l
+ 
+part1 = count 4
 
-part1 = flip count 4
-
-part2 = flip count 14
+part2 = count 14
 
 main :: IO ()
 main = do
