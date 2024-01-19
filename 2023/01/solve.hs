@@ -22,6 +22,7 @@ teste = ["two1nine", "eightwothree", "abcone2threexyz", "xtwone3four", "4nineeig
 
 troca "" = ""
 troca s@(h:t)
+    | isPrefixOf "zero"  s = 'o': troca (drop 3 s)
     | isPrefixOf "one"   s = '1': troca (drop 3 s)
     | isPrefixOf "two"   s = '2': troca (drop 3 s)
     | isPrefixOf "three" s = '3': troca (drop 5 s)
