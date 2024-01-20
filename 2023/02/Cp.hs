@@ -11,8 +11,11 @@ infix 4  -|-
 split :: (a -> b) -> (a -> c) -> a -> (b,c)
 split f g x = (f x, g x)
 
+
+
 (><) :: (a -> b) -> (c -> d) -> (a,c) -> (b,d)
-f >< g = split (f . p1) (g . p2)
+--f >< g = split (f . p1) (g . p2)
+(><) f g (x,y) = (f x, g y)
 
 -- the 0-adic split 
 
