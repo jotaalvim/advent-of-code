@@ -7,6 +7,7 @@ import Data.List
 toInt :: String -> Int 
 toInt = read 
 
+fromJust (Just a) = a
 mk2 [a,b] = (a,b)
 
 parseInput =  map ( ( id           >< ( map toInt >< map toInt ) )
@@ -18,14 +19,24 @@ parseInput =  map ( ( id           >< ( map toInt >< map toInt ) )
 
 -- Solution -- 
 
+-- Part 1 -- 
+points 0  = 0
+points n  = 2^ pred n
+
 repetidos = nub >>= flip (\\)
 
-points 0 = 0
-points n = 2^ pred n
+part1     = sum . map ( points . length . repetidos . conc . snd )
 
-part1 = sum . map ( points . length . repetidos . conc . snd  )
-part2 = id
+-- Part 2 -- 
+part2  c  = length $ cataCards c c $ map fst c
 
+pedaco (n, (a,b)) = [ succ n .. n + (length  (repetidos (a++b))) ]
+
+next_cards cards = map ( (id >< (fromJust . flip lookup cards)) . dup )
+
+cataCards cc [] b = b
+cataCards cc c b  = cataCards cc nc ((map fst nc) ++ b) where 
+          nc = next_cards cc $ concatMap pedaco c
 
 main :: IO ()
 main = do
