@@ -2,11 +2,6 @@ import Data.List.Split
 import Data.List
 import Text.Regex.Posix
 
-countX e =  length $ concat $ (e =~ "XMAS" :: [[String]])
-
-parseInput = filter (not . null) 
-           . splitOn "\n"
-
 example = [ "1...XXMAS.", 
             "2SAMXMS...",
             "3..S..A...",
@@ -29,26 +24,28 @@ example2 =  [".M.S......",
              "M.M.M.M.M.",
              ".........."]
 
+
+
+parseInput = filter (not . null) 
+           . splitOn "\n"
+allDiagonal m = [diagonalS m (i,0) | i <- [0.. length m -1]] 
+            ++  [diagonalI m (0,i) | i <- [1.. length (head m) -1]]
+
+diagonalS m (sx,sy) = [getV (i+sx,i+sy) m | i <- [0..rows]] where rows = length m - sx -1
+diagonalI m (sx,sy) = [getV (i+sx,i+sy) m | i <- [0..cols]] where cols = length (head m) - sy -1
+
+genX m =  [m, rm, ad, adr, adrev,adrevr,col,colr]
+    where [rm, adr, adrevr, colr] = map (map reverse) [m, ad, adrev, col]
+          col    = transpose m
+          ad     = allDiagonal m
+          adrev  = allDiagonal rm
+
+countX e =  length $ concat $ (e =~ "XMAS" :: [[String]])
+
 lookX l = (concat l =~ "M.S.A.M.S" :: [[String]])
        ++ (concat l =~ "S.M.A.S.M" :: [[String]])
        ++ (concat l =~ "M.M.A.S.S" :: [[String]])
        ++ (concat l =~ "S.S.A.M.M" :: [[String]])
-
-
-allDiagonal m = [diagonalS m (i,0) | i <- [0.. length m -1]] 
-        ++ tail [diagonalI m (0,i) | i <- [0.. length (head m) -1]]
-
-diagonalS m (sx,sy) = [getV (i+sx,i+sy) m | i <- [0..size]] where size = length m - sx -1
-diagonalI m (sx,sy) = [getV (i+sx,i+sy) m | i <- [0..size]] where size = length (head m) - sy -1
-
-genX m = [m, rm, ad, adr, adrev,adrevr,col,colr]
-    where rm     = map reverse m
-          adr    = map reverse ad
-          adrevr = map reverse adrev
-          colr   = map reverse col 
-          col    = transpose m
-          ad     = allDiagonal m
-          adrev  = allDiagonal rm
 
 getV (x,y) m = m !! y !! x
 
