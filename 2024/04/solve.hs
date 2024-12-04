@@ -7,7 +7,16 @@ countX e =  length $ concat $ (e =~ "XMAS" :: [[String]])
 parseInput = filter (not . null) 
            . splitOn "\n"
 
-example = [ "1...XXMAS.", "2SAMXMS...", "3..S..A...", "4.A.A.MS.X", "XMASAMX5MM", "X6....XA.A", "S7S.S.S.SS", "8A.A.A.A.A", "9.M.M.M.MM", "ÇX.X.XMASX" ]
+example = [ "1...XXMAS.", 
+            "2SAMXMS...",
+            "3..S..A...",
+            "4.A.A.MS.X",
+            "XMASAMX5MM",
+            "X6....XA.A",
+            "S7S.S.S.SS",
+            "8A.A.A.A.A",
+            "9.M.M.M.MM",
+            "ÇX.X.XMASX" ]
 
 example2 =  [".M.S......",
              "..A..MSMS.",
@@ -35,11 +44,11 @@ diagonalI m (sx,sy) = [getV (i+sx,i+sy) m | i <- [0..size]] where size = length 
 genX m = [m, rm, ad, adr, adrev,adrevr,col,colr]
     where rm     = map reverse m
           adr    = map reverse ad
+          adrevr = map reverse adrev
+          colr   = map reverse col 
+          col    = transpose m
           ad     = allDiagonal m
           adrev  = allDiagonal rm
-          adrevr = map reverse adrev
-          col    = transpose m
-          colr   = map reverse col 
 
 getV (x,y) m = m !! y !! x
 
