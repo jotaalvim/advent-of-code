@@ -9,7 +9,7 @@ parseInput = id
            . filter (not . null) 
            . splitOn "\n"
 
-data Direction = U | D | L | R deriving (Show, Eq)
+data Direction = U | D | L | R deriving (Show, Eq,Ord)
 
 rotate U = R
 rotate D = L
@@ -39,8 +39,8 @@ part1 m = length $ nub $ move U i [] cols rows walls
           i     = head $ getC '^' m
           walls =        getC '#' m
 
--- the worst case you have to pass 4 times on the same position to be a loop
-loop (a:b:c:d:t) = a == b && a == c && a == d || loop (b:c:t)
+-- the worst case you have to pass 2 times on the same position to be a loop
+loop (a:b:t) = a == b || loop t
 loop _ = False
 
 -- does not terminate? return True if it halts
@@ -48,7 +48,7 @@ termination d p a cols rows walls
     | nx > cols - 1 || nx < 0 || ny > rows - 1 || ny < 0 = False
     | otherwise = loop newacc || termination nextd nextp newacc cols rows walls
     where  
-        newacc = insert  p a
+        newacc = insert  (p,d) a
         pn     = forward p d
         (nextp@(nx,ny), nextd) = if elem pn walls then (p, rotate d) else ( pn, d)
 
