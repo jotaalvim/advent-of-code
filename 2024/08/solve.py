@@ -30,25 +30,31 @@ def makeAntinode(antena1, antena2):
     global xsize, ysize
     x1  , y1   = antena1
     x2  , y2   = antena2
-    xdif, ydif = abs(x1 - x2), abs(y1 - y2)
-    p1x , p1y  = min(x1, x2) - xdif, min(y1, y2) - ydif
-    p2x , p2y  = max(x1, x2) + xdif, max(y1, y2) + ydif
+    xdif, ydif = x1 - x2, y1 - y2
+    p1x , p1y  = x1 - xdif,y1 - ydif
+    p2x , p2y  = x2 + xdif,y2 + ydif
 
-    anti = [(p1x, p1y), (p2x, p2y)]
-
-    if p2x < 0 or p2x > xsize - 1 or p2y < 0 or p2y > ysize - 1: anti = [anti[0]] 
-    if p1x < 0 or p1x > xsize - 1 or p1y < 0 or p1y > ysize - 1: anti = [] 
-
-    return anti
+    if (p2x < 0 or p2x > xsize - 1 or p2y < 0 or p2y > ysize - 1 and
+        p1x < 0 or p1x > xsize - 1 or p1y < 0 or p1y > ysize - 1):
+        return []
+    if  p2x < 0 or p2x > xsize - 1 or p2y < 0 or p2y > ysize - 1: 
+        return [(p1x, p1y)]
+    if  p1x < 0 or p1x > xsize - 1 or p1y < 0 or p1y > ysize - 1: 
+        return [(p2x, p2y)]
+    else:
+        return [(p1x, p1y), (p2x, p2y)]
 
 def part1(inp):
     print(inp)
+    # antinodes = set()
     antinodes = []
     for k in inp.keys():
         for p1,p2 in list(combinations(inp[k], 2)):
-            antinodes += makeAntinode(p1,p2)
-
+            antinodes +=  makeAntinode(p1,p2)
+            #for a in makeAntinode(p1,p2):
+            #    antinodes.add( a )
     printAnti (antinodes)
+    print(antinodes)
     return len(antinodes)
 
 def part2(inp):
