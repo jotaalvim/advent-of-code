@@ -26,16 +26,16 @@ type Dial = (Int  , Int     )
 data Rotation = R Int | L Int 
 
 rotates :: Dial -> Rotation -> Dial
-rotates (l,p) (R n) = fixCountsR   $ (abs >< id) $ divMod (p + n) 100
-rotates (l,p) (L n) = fixCountsL p $ (abs >< id) $ divMod (p - n) 100
+rotates (l,p) (R n) = fixCountsR   $ abs >< id $ divMod (p + n) 100
+rotates (l,p) (L n) = fixCountsL p $ abs >< id $ divMod (p - n) 100
 
 -- finishing on zeros does not click
 fixCountsR (nl, 0 ) = (nl - 1, 0)   
-fixCountsR p = p
+fixCountsR d = d
 
 -- starting  on zeros does not click
 fixCountsL 0 (nl, np) = ( nl -1, np)
-fixCountsL _ p = p
+fixCountsL _ d = d
 
 countsZero = filter $ (== 0) . snd 
 
