@@ -1,12 +1,8 @@
 import Data.List.Split
 import Data.List
 
-infixr 8 ...
 infixr 8 ><
-
-(...) = (.).(.)  -- is the same as .:
 (f >< g) (x,y) = (f x,g y)
-dup a = (a,a)
 mktp [a,b] = (a,b)
 
 ------ Parsing ----------------------------------------------------------------
@@ -22,6 +18,7 @@ parseInput = id
            . splitOn "\n\n"
 
 ------- Part 1 ----------------------------------------------------------------
+
 ranges :: [(Int,Int)] -> Int -> Bool
 ranges l x = any (\(a,b) -> a <= x && x <= b ) l
 
