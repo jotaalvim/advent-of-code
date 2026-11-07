@@ -1,0 +1,9 @@
+1. Type-level - solve it at compile time
+
+2. Only pointfree allowed
+
+3. Obfuscated program 
+
+4. Data.List not allowed
+
+5. no higher order 
